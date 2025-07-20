@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ML Model Metrics Dashboard</title>
+
+    <!-- CSS for styling -->
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; background: #f4f4f4; }
+        h2 { color: #333; }
+        .chart-container { display: flex; flex-wrap: wrap; gap: 40px; justify-content: center; }
+        canvas { background: #fff; padding: 10px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+        .plotly-chart { width: 500px; height: 400px; margin: 10px auto; }
+    </style>
+
+    <!-- JS Libraries -->
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+    <h2>📊 Model Metrics Comparison</h2>
+
+    <!-- Chart.js Bar Chart -->
+    <div class="chart-container">
+        <canvas id="metricsChart" width="800" height="400"></canvas>
+    </div>
+
+    <!-- Plotly Pie Chart for 'class_val' -->
+    <h2>🎯 Class Value Distribution (Plotly)</h2>
+    <div id="classPie" class="plotly-chart"></div>
+
+    <script>
+        // 📊 Chart.js Bar Chart
+        const ctx = document.getElementById('metricsChart').getContext('2d');
+        const metricsChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Accuracy', 'CV Accuracy', 'MSE', 'MAE'],
+                datasets: [
+                    {
+                        label: 'Logistic Regression',
+                        data: [0.776, 0.774, 0.488, 0.224],
+                        backgroundColor: '#1f77b4'
+                    },
+                    {
+                        label: 'GridSearch + Logistic Regression',
+                        data: [0.777, 0.775, 0.470, 0.223],
+                        backgroundColor: '#ff7f0e'
+                    },
+                    {
+                        label: 'Decision Tree',
+                        data: [0.909, 0.895, 0.144, 0.091],
+                        backgroundColor: '#2ca02c'
+                    },
+                    {
+                        label: 'GridSearch + Decision Tree',
+                        data: [0.911, 0.901, 0.140, 0.089],
+                        backgroundColor: '#d62728'
+                    },
+                    {
+                        label: 'MLP',
+                        data: [0.941, 0.932, 0.098, 0.058],
+                        backgroundColor: '#9467bd'
+                    },
+                    {
+                        label: 'GridSearch + MLP',
+                        data: [0.949, 0.940, 0.085, 0.051],
+                        backgroundColor: '#8c564b'
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    title: { display: true, text: 'ML Model Evaluation Metrics' }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: { stepSize: 0.1 }
+                    }
+                }
+            }
+        });
+
+        // 🎯 Plotly Pie Chart for class_val distribution
+        var classLabels = ['unacc', 'acc', 'good', 'vgood'];
+        var classValues = [1210, 384, 69, 65];  // replace with actual counts
+
+        var data = [{
+            type: "pie",
+            labels: classLabels,
+            values: classValues,
+            textinfo: "label+percent",
+            insidetextorientation: "radial"
+        }];
+
+        var layout = {
+            title: "Class Value Distribution",
+            height: 400,
+            width: 500
+        };
+
+        Plotly.newPlot('classPie', data, layout);
+    </script>
+</body>
+</html>
